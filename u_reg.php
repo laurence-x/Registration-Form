@@ -2,7 +2,13 @@
 
 require $_SERVER['DOCUMENT_ROOT'] . '/php/app.php';
 
-if (isset($_POST['email'])) {
+if (
+    array_key_exists('email', $_POST)
+    && isset($_POST['email'])
+    && !empty($_POST['email'])
+    && $_POST['email'] !== null
+    && $_POST['email'] !== ''
+) {
     $em = clean($_POST['email'], "lo");
     $em = filter_var($em, FILTER_SANITIZE_EMAIL);
 
@@ -19,8 +25,11 @@ if (isset($_POST['email'])) {
             $sv,
             $un,
             $pw,
-            $db, $sel = 'email',
-            $tn, $whr = 'email', $val = $ems
+            $db,
+            $sel = 'email',
+            $tn,
+            $whr = 'email',
+            $val = $ems
         );
 
         if ($uex) {
@@ -34,7 +43,7 @@ if (isset($_POST['email'])) {
             $conn = mysqli_connect($sv, $un, $pw, $db);
             if (mysqli_connect_errno()) {
                 $ms = 'ERROR: No conn to db "'
-                . $db . '" - ' . mysqli_connect_error();
+                    . $db . '" - ' . mysqli_connect_error();
                 goto end;
             }
 
